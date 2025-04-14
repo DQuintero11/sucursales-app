@@ -1,0 +1,180 @@
+
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  
+<div class = "padre">
+
+  <div class="product-container">
+
+      <div>
+          <h2>Lista de Productos</h2>
+      </div>
+
+      <nz-table
+  [nzData]="sucursales"
+  [nzBordered]="true"
+  [nzSize]="'middle'"
+  [nzScroll]="{ x: '1000px' }"
+  [nzPageSize]="pageSize"
+  [nzTotal]="total"
+  [(nzPageIndex)]="pageIndex"
+  [nzShowPagination]="true"
+  [nzFrontPagination]="false"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+
+  <thead>
+    <tr>
+
+
+      <th nzShowSort nzSortKey="codigo">Código</th>
+      <th>Descripción</th>
+      <th>Dirección</th>
+      <th>Identificación</th>
+      <th nzShowSort nzSortKey="fechaCreacion">Fecha de creación</th>
+      <th>Moneda</th>
+      <th>Acciones</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let s of sucursales">
+      <td>{{ s.codigo }}</td>
+      <td>{{ s.descripcion }}</td>
+      <td>{{ s.direccion }}</td>
+      <td>{{ s.identificacion }}</td>
+      <td>{{ s.fechaCreacion | date: 'yyyy-MM-dd' }}</td>
+      <td>{{ s.nombreMoneda }}</td>
+      <td>
+        <button nz-button  (click)="abrirModal(s)"       class="btn-edit" >
+          <i class="fas fa-edit"></i>
+        </button>
+      
+
+        <button
+        nz-popconfirm
+        nzPopconfirmTitle="¿Seguro que desea eliminar esta sucursal?"
+        (nzOnConfirm)="eliminar(s.id!)"
+        nzPopconfirmPlacement="topLeft"
+        nz-button 
+        class="btn-delete"
+      ><i class="fas fa-trash"></i>
+      </button>
+        
+      
+      </td>
+      
+    </tr>
+  </tbody>
+</nz-table>
+
+
+
+<!-- Modal de crear/editar sucursal -->
+<nz-modal
+  *ngIf="visibleModal" 
+  [(nzVisible)]="visibleModal"
+  [nzTitle]="sucursalSeleccionada ? 'Editar Sucursal' : 'Nueva Sucursal'"
+  (nzOnCancel)="cerrarModal()"
+  (nzOnOk)="guardarSucursal()"
+  [nzOkDisabled]="form.invalid"
+>
+<div style="padding: 1rem;">
+  <ng-container *nzModalContent>
+  <form [formGroup]="form" (ngSubmit)="guardarSucursal()">
+
+
+
+    <!-- Codigo -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Codigo</nz-form-label>
+      <nz-form-control [nzSpan]="16" nzErrorTip="Int">
+        <input nz-input formControlName="codigo" />
+      </nz-form-control>
+    </nz-form-item>
+
+
+    <!-- Descripción -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Descripción</nz-form-label>
+      <nz-form-control [nzSpan]="16" nzErrorTip="Máximo 250 caracteres">
+        <input nz-input formControlName="descripcion" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Dirección -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Dirección</nz-form-label>
+      <nz-form-control [nzSpan]="16" nzErrorTip="Máximo 250 caracteres">
+        <input nz-input formControlName="direccion" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Identificación -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Identificación</nz-form-label>
+      <nz-form-control [nzSpan]="16" nzErrorTip="Máximo 50 caracteres">
+        <input nz-input formControlName="identificacion" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Fecha de creación -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Fecha de creación</nz-form-label>
+      <nz-form-control [nzSpan]="16" [nzErrorTip]="'Fecha no puede ser anterior a hoy'">
+        <nz-date-picker
+          formControlName="fechaCreacion"
+          [nzFormat]="'yyyy-MM-dd'"
+        ></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Moneda -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Moneda</nz-form-label>
+      <nz-form-control [nzSpan]="16" nzErrorTip="Seleccione una moneda">
+        <nz-select formControlName="IdMoneda" nzPlaceHolder="Seleccione una moneda">
+          <nz-option
+            *ngFor="let moneda of monedas"
+            [nzValue]="moneda.id"
+            [nzLabel]="moneda.codigo"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-container>
+  </div>
+</nz-modal>
+
+
+
+<!-- Botón para crear nueva sucursal -->
+<button
+  nz-button
+  nzType="primary"
+  class="btn-create" 
+  (click)="abrirModal()"
+>
+
+
+
+<i class="fas fa-plus"></i>
+
+</button>
+
+  </div>
+
+</div>
+
+
+
+
+</body>
+
+
+
