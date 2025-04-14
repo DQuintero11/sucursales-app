@@ -120,30 +120,30 @@ export class SucursalesComponent implements OnInit {
         let aValue = a[key];
         let bValue = b[key];
   
-        // Verificar si la propiedad es 'fechaCreacion' y si los valores son cadenas
+
         if (key === 'fechaCreacion') {
-          // Asegurarse de que aValue y bValue sean strings
+
           if (typeof aValue === 'string' && typeof bValue === 'string') {
             aValue = new Date(aValue).getTime();
             bValue = new Date(bValue).getTime();
           } else {
-            // Si no son strings, manejarlos según sea necesario
+
             return 0;
           }
         }
   
-        // Si los valores son números o strings, proceder a la comparación
+
         if (typeof aValue === 'number' && typeof bValue === 'number') {
           return value === 'ascend' ? aValue - bValue : bValue - aValue;
         }
   
-        // Para cualquier otro caso, comparar como strings
+
         return value === 'ascend'
           ? String(aValue).localeCompare(String(bValue))
           : String(bValue).localeCompare(String(aValue));
       });
   
-      this.loadData(); // Llamar a loadData después de ordenar
+      this.loadData(); 
     }
   }
   
